@@ -10,6 +10,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
+import org.newdawn.slick.InputListener;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.geom.Circle;
@@ -22,7 +23,12 @@ public class SetupClass extends BasicGame {
 
 	private SpriteSheet bossSheet; 
 	private Animation bossAnimation;
+	
 	private String mouse = "No mouse input!";
+	private Rectangle mouseHitBox = null;
+	private boolean mouse0Down = false;
+	private boolean mouse0Clicked = false;
+	
 	private float wizardX = 350;
 	private float wizardY = 430;
 	private Solid wizard;
@@ -37,7 +43,6 @@ public class SetupClass extends BasicGame {
 	private int score = 1;
 	private int firstNum = 0;
 	private int secondNum = 0;
-	private Rectangle mouseHitBox = null; 
 	private int life = 3;
 	private int bossCount = 0;
 	
@@ -95,10 +100,16 @@ public class SetupClass extends BasicGame {
 		mouseHitBox.setX(Mouse.getX());
 		mouseHitBox.setY(Mouse.getY());
 		
-		if(Mouse.isButtonDown(0) || Mouse.isButtonDown(1) || Mouse.isButtonDown(2)){ //checking if the mouse button is down
-			System.out.println(Mouse.getEventButton() + " " + Mouse.getEventButtonState());
+		if(Mouse.isButtonDown(0)){ //checking if the mouse button is down
+			mouse0Down=true;
 		}
-				
+		
+		if(!Mouse.isButtonDown(0) && mouse0Down){ //checking if the mouse button was down before it has been released
+			//here we set a variable to notify that the left mouse button has been clicked
+			System.out.println("CLICK DETECTED");
+			mouse0Down = false;
+			mouse0Clicked = true; //IMPORTANT NOTE: this variable should be reset to false at the end of the update
+		}
 		
 		//Creates 
 		timeElapsed += delta;
@@ -166,6 +177,7 @@ public class SetupClass extends BasicGame {
 		wizard.getAnimations()[wizard.getAnimationIndex()].setPingPong(true);
 		
 		
+		mouse0Clicked = false; //reseting the click variable
 	}
 	
 	
