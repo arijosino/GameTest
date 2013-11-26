@@ -4,9 +4,8 @@ import java.util.Random;
 
 import org.newdawn.slick.Animation;
 
-public class BadGuy {
-	private float x = 0, y=0;
-	private Animation am = null;
+public class BadGuy extends Solid {
+	
 	private String number = "1";
 	private Random random = new Random();
 
@@ -17,30 +16,6 @@ public class BadGuy {
 
 	public void setNumber(String number) {
 		this.number = number;
-	}
-
-	public float getX() {
-		return x;
-	}
-
-	public void setX(float x) {
-		this.x = x;
-	}
-
-	public float getY() {
-		return y;
-	}
-
-	public void setY(float y) {
-		this.y = y;
-	}
-	
-	public Animation getAm() {
-		return am;
-	}
-
-	public void setAm(Animation am) {
-		this.am = am;
 	}
 
 	public BadGuy(float x, float y, Animation am) {
