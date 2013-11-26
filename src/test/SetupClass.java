@@ -1,10 +1,6 @@
 package test;
 
 
-import java.awt.Font;
-import java.util.ArrayList;
-import java.util.Random;
-import org.newdawn.slick.UnicodeFont;
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.AppGameContainer;
@@ -24,8 +20,8 @@ public class SetupClass extends BasicGame {
 	//declaring some constants to help indexing the animations
 	public static final int DEFAULT=0,LEFT=1,RIGHT=2;
 
-	private SpriteSheet ghostSheet, wizardSheet, wizardSheetLeft, wizardSheetRight, bossSheet; 
-	private Animation ghostAnimation, wizardAnimation, wizardAnimationLeft, wizardAnimationRight, wizardAnimationStanding, bossAnimation;
+	private SpriteSheet bossSheet; 
+	private Animation bossAnimation;
 	private String mouse = "No mouse input!";
 	private float wizardX = 350;
 	private float wizardY = 430;
@@ -35,13 +31,13 @@ public class SetupClass extends BasicGame {
 	private int timeElapsed = 0; 
 	private int ghostsIndex = 0;
 	private int SPRITESIZE = 100;
-	private float speed = 0.1f;
+	private float speed = 0.05f;
 	private float bossSpeed = 0.001f;
 	private float floorBoundary = 450.0f;
 	private int score = 1;
 	private int firstNum = 0;
 	private int secondNum = 0;
-	private Circle mousePointer = null; 
+	private Rectangle mouseHitBox = null; 
 	private int life = 3;
 	private int bossCount = 0;
 	
@@ -55,41 +51,18 @@ public class SetupClass extends BasicGame {
 
 	// GameContainer is the window that holds the game and most settings such as mouse precision. 
 	public void init(GameContainer container) throws SlickException {
-		
-//		//Ghost animation
-//		ghostSheet = new SpriteSheet("Art/Ghost/GhostSpriteSheet.png", SPRITESIZE, SPRITESIZE);
-//		ghostAnimation = new Animation(ghostSheet, 400);
-//		ghostAnimation.setPingPong(true);
+		//creating the mouse hitbox as a tiny invisible box just for reference
+		mouseHitBox = new Rectangle(Mouse.getX(), Mouse.getY(), 20, 20);
 		
 		//OctoBoss Animation
 		bossSheet = new SpriteSheet("Art/Octoboss/octbossSpriteSheet.png", SPRITESIZE, SPRITESIZE);
 		bossAnimation = new Animation(bossSheet, 500);
 		bossAnimation.setPingPong(true);
 		
-		//Wizard object
+		//Creating the Wizard
 		wizard = new Solid(wizardX,wizardY);
 		
-//		//Wizard Standing Animation
-//		wizardSheet = new SpriteSheet("Art/Wizard/WizardSpreadSheet.png", SPRITESIZE, SPRITESIZE);
-//		wizardAnimationStanding = new Animation(wizardSheet, 400);
-//		wizardAnimationStanding.setPingPong(true);
-//		
-//		
-//		//Current Wizard Animation
-//		wizardAnimation = new Animation(wizardSheet, 400);
-//		wizardAnimation.setPingPong(true);
-//		
-//		//Wizard Moving Left Animation
-//		wizardSheetLeft = new SpriteSheet("Art/Wizard/WizardSpreadSheetLeft.png", SPRITESIZE, SPRITESIZE);
-//		wizardAnimationLeft = new Animation(wizardSheetLeft, 400);
-//		wizardAnimationLeft.setPingPong(true);
-//		
-//		//Wizard Moving Right Animation
-//		wizardSheetRight = new SpriteSheet("Art/Wizard/WizardSpreadSheetRight.png", SPRITESIZE, SPRITESIZE);
-//		wizardAnimationRight = new Animation(wizardSheetRight, 400);
-//		wizardAnimationRight.setPingPong(true);
-		
-		//redoing the code above so it look a little bit less hardcoded
+		//creating spritesheets for the 3 types of character animation: standing still, walking left and walking right
 		wizard.setSprite(new SpriteSheet[3]);
 		wizard.getSprite()[DEFAULT] = new SpriteSheet("Art/Wizard/WizardSpreadSheet.png", SPRITESIZE, SPRITESIZE);
 		wizard.getSprite()[LEFT] = new SpriteSheet("Art/Wizard/WizardSpreadSheetLeft.png", SPRITESIZE, SPRITESIZE);
@@ -101,11 +74,7 @@ public class SetupClass extends BasicGame {
 			wizard.getAnimations()[i].setPingPong(true);
 			
 		}
-		
-		
-		
-		
-		
+				
 		
 	}
 	
@@ -119,12 +88,17 @@ public class SetupClass extends BasicGame {
 		//Grabs the x and y coordinates of the mouse and writes it to screen to aid in implementation.
 		int xpos = Mouse.getX();
 		int ypos = Mouse.getY();
+		
 		mouse = "Mouse position X: " + xpos + " Y: " + (600-ypos);
 		
+		//updating the mouseHitBox position
+		mouseHitBox.setX(Mouse.getX());
+		mouseHitBox.setY(Mouse.getY());
 		
-		
-//		ghostAnimation.update(delta);							//controls the rate the animation of the ghost updates synced with the games refresh rate(delta).
-		
+		if(Mouse.isButtonDown(0) || Mouse.isButtonDown(1) || Mouse.isButtonDown(2)){ //checking if the mouse button is down
+			System.out.println(Mouse.getEventButton() + " " + Mouse.getEventButtonState());
+		}
+				
 		
 		//Creates 
 		timeElapsed += delta;
@@ -152,8 +126,13 @@ public class SetupClass extends BasicGame {
 			
 			if(ghosts[i] != null){
 				ghosts[i].setY(ghosts[i].getY()+(speed+(score/100)));
+				//updating animation stuff
 				ghosts[i].getAnimations()[DEFAULT].update(delta);
 				ghosts[i].getAnimations()[DEFAULT].setPingPong(true);
+				//updating hitbox position
+				ghosts[i].getHitbox().setX(ghosts[i].getX());
+				ghosts[i].getHitbox().setY(ghosts[i].getY());
+				
 				if(ghosts[i].getY() >= floorBoundary){				//code to make the ghosts disapear when they've reached the bottom. Doesnt work yet.
 					ghosts[i] = null;
 					ghostsIndex--;
@@ -165,26 +144,8 @@ public class SetupClass extends BasicGame {
 		
 		
 		//These next 3 if statements move the wizard animation left if A is pressed or right if D is pressed. If neither is pressed the standing animation is used. 
-//		wizardAnimation.update(delta);
 		wizard.getAnimations()[wizard.getAnimationIndex()].update(delta);
-		
-//		if(container.getInput().isKeyDown(Input.KEY_A)){
-//			wizardAnimation = wizardAnimationLeft;
-//			if(wizardX > 1){
-//				wizardX -= delta * 0.5f;
-//			}
-//		}
-//		
-//		if(container.getInput().isKeyDown(Input.KEY_D)){
-//			wizardAnimation = wizardAnimationRight;
-//			if(wizardX < 700){
-//				wizardX += delta * 0.5f;
-//			}
-//		}
-//		
-//		if(!container.getInput().isKeyDown(Input.KEY_D) & !container.getInput().isKeyDown(Input.KEY_A)){
-//			wizardAnimation = wizardAnimationStanding;
-//		}
+
 		if(container.getInput().isKeyDown(Input.KEY_A)){
 			wizard.setAnimationIndex(LEFT);
 			if(wizardX > 1){
@@ -202,10 +163,7 @@ public class SetupClass extends BasicGame {
 		if(!container.getInput().isKeyDown(Input.KEY_D) & !container.getInput().isKeyDown(Input.KEY_A)){
 			wizard.setAnimationIndex(DEFAULT);
 		}
-//		wizardAnimation.setPingPong(true);
 		wizard.getAnimations()[wizard.getAnimationIndex()].setPingPong(true);
-		
-		
 		
 		
 	}
@@ -242,8 +200,7 @@ public class SetupClass extends BasicGame {
 	    
 		
 
-//		wizardAnimation.draw(wizardX, wizardY);							//Draws the wizard standing animation
-	    wizard.getAnimations()[wizard.getAnimationIndex()].draw(wizardX, wizardY);
+	    wizard.getAnimations()[wizard.getAnimationIndex()].draw(wizardX, wizardY); //drawing wizard's current animation
 		g.drawString("Health: " + life, 100, 530);
 		g.drawString("" + firstNum + " x " + secondNum + " = " + firstNum*secondNum, 250, 530);
 		
