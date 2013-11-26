@@ -19,9 +19,9 @@ public class BadGuy extends Solid {
 	}
 
 	public BadGuy(float x, float y, Animation am) {
-		this.x = x;
-		this.y = y;
-		this.am = am;
+		super(x,y);
+		this.setAnimations(new Animation[1]);
+		this.getAnimations()[0] = am;
 		int firstNum = random.nextInt(12)+1;
 		int secondNum = random.nextInt(12)+1;
 		int finalNum = firstNum * secondNum;

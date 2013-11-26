@@ -21,12 +21,15 @@ import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Shape;
 
 public class SetupClass extends BasicGame {
+	//declaring some constants to help indexing the animations
+	public static final int DEFAULT=0,LEFT=1,RIGHT=2;
 
 	private SpriteSheet ghostSheet, wizardSheet, wizardSheetLeft, wizardSheetRight, bossSheet; 
 	private Animation ghostAnimation, wizardAnimation, wizardAnimationLeft, wizardAnimationRight, wizardAnimationStanding, bossAnimation;
 	private String mouse = "No mouse input!";
 	private float wizardX = 350;
 	private float wizardY = 430;
+	private Solid wizard;
 	private BadGuy ghosts[] = new BadGuy[10];
 	private BadGuy boss = null;
 	private int timeElapsed = 0; 
@@ -53,35 +56,52 @@ public class SetupClass extends BasicGame {
 	// GameContainer is the window that holds the game and most settings such as mouse precision. 
 	public void init(GameContainer container) throws SlickException {
 		
-		//Ghost animation
-		ghostSheet = new SpriteSheet("Art/Ghost/GhostSpriteSheet.png", SPRITESIZE, SPRITESIZE);
-		ghostAnimation = new Animation(ghostSheet, 400);
-		ghostAnimation.setPingPong(true);
+//		//Ghost animation
+//		ghostSheet = new SpriteSheet("Art/Ghost/GhostSpriteSheet.png", SPRITESIZE, SPRITESIZE);
+//		ghostAnimation = new Animation(ghostSheet, 400);
+//		ghostAnimation.setPingPong(true);
 		
 		//OctoBoss Animation
 		bossSheet = new SpriteSheet("Art/Octoboss/octbossSpriteSheet.png", SPRITESIZE, SPRITESIZE);
 		bossAnimation = new Animation(bossSheet, 500);
 		bossAnimation.setPingPong(true);
 		
-		//Wizard Standing Animation
-		wizardSheet = new SpriteSheet("Art/Wizard/WizardSpreadSheet.png", SPRITESIZE, SPRITESIZE);
-		wizardAnimationStanding = new Animation(wizardSheet, 400);
-		wizardAnimationStanding.setPingPong(true);
+		//Wizard object
+		wizard = new Solid(wizardX,wizardY);
 		
+//		//Wizard Standing Animation
+//		wizardSheet = new SpriteSheet("Art/Wizard/WizardSpreadSheet.png", SPRITESIZE, SPRITESIZE);
+//		wizardAnimationStanding = new Animation(wizardSheet, 400);
+//		wizardAnimationStanding.setPingPong(true);
+//		
+//		
+//		//Current Wizard Animation
+//		wizardAnimation = new Animation(wizardSheet, 400);
+//		wizardAnimation.setPingPong(true);
+//		
+//		//Wizard Moving Left Animation
+//		wizardSheetLeft = new SpriteSheet("Art/Wizard/WizardSpreadSheetLeft.png", SPRITESIZE, SPRITESIZE);
+//		wizardAnimationLeft = new Animation(wizardSheetLeft, 400);
+//		wizardAnimationLeft.setPingPong(true);
+//		
+//		//Wizard Moving Right Animation
+//		wizardSheetRight = new SpriteSheet("Art/Wizard/WizardSpreadSheetRight.png", SPRITESIZE, SPRITESIZE);
+//		wizardAnimationRight = new Animation(wizardSheetRight, 400);
+//		wizardAnimationRight.setPingPong(true);
 		
-		//Current Wizard Animation
-		wizardAnimation = new Animation(wizardSheet, 400);
-		wizardAnimation.setPingPong(true);
+		//redoing the code above so it look a little bit less hardcoded
+		wizard.setSprite(new SpriteSheet[3]);
+		wizard.getSprite()[DEFAULT] = new SpriteSheet("Art/Wizard/WizardSpreadSheet.png", SPRITESIZE, SPRITESIZE);
+		wizard.getSprite()[LEFT] = new SpriteSheet("Art/Wizard/WizardSpreadSheetLeft.png", SPRITESIZE, SPRITESIZE);
+		wizard.getSprite()[RIGHT] = new SpriteSheet("Art/Wizard/WizardSpreadSheetRight.png", SPRITESIZE, SPRITESIZE);
 		
-		//Wizard Moving Left Animation
-		wizardSheetLeft = new SpriteSheet("Art/Wizard/WizardSpreadSheetLeft.png", SPRITESIZE, SPRITESIZE);
-		wizardAnimationLeft = new Animation(wizardSheetLeft, 400);
-		wizardAnimationLeft.setPingPong(true);
+		wizard.setAnimations(new Animation[3]);
+		for(int i=0;i<wizard.getAnimations().length;i++){
+			wizard.getAnimations()[i] = new Animation(wizard.getSprite()[i], 400);
+			wizard.getAnimations()[i].setPingPong(true);
+			
+		}
 		
-		//Wizard Moving Right Animation
-		wizardSheetRight = new SpriteSheet("Art/Wizard/WizardSpreadSheetRight.png", SPRITESIZE, SPRITESIZE);
-		wizardAnimationRight = new Animation(wizardSheetRight, 400);
-		wizardAnimationRight.setPingPong(true);
 		
 		
 		
@@ -103,7 +123,7 @@ public class SetupClass extends BasicGame {
 		
 		
 		
-		ghostAnimation.update(delta);							//controls the rate the animation of the ghost updates synced with the games refresh rate(delta).
+//		ghostAnimation.update(delta);							//controls the rate the animation of the ghost updates synced with the games refresh rate(delta).
 		
 		
 		//Creates 
@@ -132,7 +152,8 @@ public class SetupClass extends BasicGame {
 			
 			if(ghosts[i] != null){
 				ghosts[i].setY(ghosts[i].getY()+(speed+(score/100)));
-				ghosts[i].getAm().setPingPong(true);
+				ghosts[i].getAnimations()[DEFAULT].update(delta);
+				ghosts[i].getAnimations()[DEFAULT].setPingPong(true);
 				if(ghosts[i].getY() >= floorBoundary){				//code to make the ghosts disapear when they've reached the bottom. Doesnt work yet.
 					ghosts[i] = null;
 					ghostsIndex--;
@@ -144,27 +165,45 @@ public class SetupClass extends BasicGame {
 		
 		
 		//These next 3 if statements move the wizard animation left if A is pressed or right if D is pressed. If neither is pressed the standing animation is used. 
-		wizardAnimation.update(delta);
+//		wizardAnimation.update(delta);
+		wizard.getAnimations()[wizard.getAnimationIndex()].update(delta);
 		
+//		if(container.getInput().isKeyDown(Input.KEY_A)){
+//			wizardAnimation = wizardAnimationLeft;
+//			if(wizardX > 1){
+//				wizardX -= delta * 0.5f;
+//			}
+//		}
+//		
+//		if(container.getInput().isKeyDown(Input.KEY_D)){
+//			wizardAnimation = wizardAnimationRight;
+//			if(wizardX < 700){
+//				wizardX += delta * 0.5f;
+//			}
+//		}
+//		
+//		if(!container.getInput().isKeyDown(Input.KEY_D) & !container.getInput().isKeyDown(Input.KEY_A)){
+//			wizardAnimation = wizardAnimationStanding;
+//		}
 		if(container.getInput().isKeyDown(Input.KEY_A)){
-			wizardAnimation = wizardAnimationLeft;
+			wizard.setAnimationIndex(LEFT);
 			if(wizardX > 1){
 				wizardX -= delta * 0.5f;
 			}
 		}
 		
 		if(container.getInput().isKeyDown(Input.KEY_D)){
-			wizardAnimation = wizardAnimationRight;
+			wizard.setAnimationIndex(RIGHT);
 			if(wizardX < 700){
 				wizardX += delta * 0.5f;
 			}
 		}
 		
 		if(!container.getInput().isKeyDown(Input.KEY_D) & !container.getInput().isKeyDown(Input.KEY_A)){
-			wizardAnimation = wizardAnimationStanding;
+			wizard.setAnimationIndex(DEFAULT);
 		}
-		wizardAnimation.setPingPong(true);
-		
+//		wizardAnimation.setPingPong(true);
+		wizard.getAnimations()[wizard.getAnimationIndex()].setPingPong(true);
 		
 		
 		
@@ -187,7 +226,7 @@ public class SetupClass extends BasicGame {
 		}*/
 	    for(BadGuy bg : ghosts){
 	    	if(bg != null){
-	    		g.drawAnimation(bg.getAm(), bg.getX(), bg.getY());
+	    		g.drawAnimation(bg.getAnimations()[DEFAULT], bg.getX(), bg.getY());
 	    		g.setColor(new Color(255,255,255));
 	    		g.drawString(bg.getNumber(), bg.getX()+40, bg.getY()-5);
 	    		
@@ -203,7 +242,8 @@ public class SetupClass extends BasicGame {
 	    
 		
 
-		wizardAnimation.draw(wizardX, wizardY);							//Draws the wizard standing animation
+//		wizardAnimation.draw(wizardX, wizardY);							//Draws the wizard standing animation
+	    wizard.getAnimations()[wizard.getAnimationIndex()].draw(wizardX, wizardY);
 		g.drawString("Health: " + life, 100, 530);
 		g.drawString("" + firstNum + " x " + secondNum + " = " + firstNum*secondNum, 250, 530);
 		
