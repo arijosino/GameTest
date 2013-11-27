@@ -19,7 +19,7 @@ import org.newdawn.slick.geom.Shape;
 
 public class SetupClass extends BasicGame {
 	//declaring some constants to help indexing the animations
-	public static final int DEFAULT=0,LEFT=1,RIGHT=2;
+	public static final int DEFAULT=0,LEFT=1,RIGHT=2,RESOLUTIONX=800,RESOLUTIONY=600,MAXGHOSTS=8;
 
 	private SpriteSheet bossSheet; 
 	private Animation bossAnimation;
@@ -32,9 +32,9 @@ public class SetupClass extends BasicGame {
 	private float wizardX = 350;
 	private float wizardY = 430;
 	private Solid wizard;
-	private BadGuy ghosts[] = new BadGuy[10];
+	private BadGuy ghosts[] = new BadGuy[MAXGHOSTS];
 	private BadGuy boss = null;
-	private int timeElapsed = 0; 
+	private int timeElapsed = 0;
 	private int ghostsIndex = 0;
 	private int SPRITESIZE = 100;
 	private float speed = 0.05f;
@@ -94,11 +94,11 @@ public class SetupClass extends BasicGame {
 		int xpos = Mouse.getX();
 		int ypos = Mouse.getY();
 		
-		mouse = "Mouse position X: " + xpos + " Y: " + (600-ypos);
+		mouse = "Mouse position X: " + xpos + " Y: " + (RESOLUTIONY-ypos);
 		
 		//updating the mouseHitBox position
 		mouseHitBox.setX(Mouse.getX());
-		mouseHitBox.setY(Mouse.getY());
+		mouseHitBox.setY(RESOLUTIONY - Mouse.getY());
 		
 		if(Mouse.isButtonDown(0)){ //checking if the mouse button is down
 			mouse0Down=true;
@@ -106,15 +106,14 @@ public class SetupClass extends BasicGame {
 		
 		if(!Mouse.isButtonDown(0) && mouse0Down){ //checking if the mouse button was down before it has been released
 			//here we set a variable to notify that the left mouse button has been clicked
-			System.out.println("CLICK DETECTED");
-			mouse0Down = false;
 			mouse0Clicked = true; //IMPORTANT NOTE: this variable should be reset to false at the end of the update
+			mouse0Down = false;
 		}
 		
-		//Creates 
+		//Creates the ghosts
 		timeElapsed += delta;
-		if(timeElapsed > 500 & ghostsIndex < 10){
-			for(int i = 0; i < 10; i++){
+		if(timeElapsed > 500 & ghostsIndex < ghosts.length){
+			for(int i = 0; i < ghosts.length; i++){
 				if(ghosts[i] == null){
 					ghosts[i] = new BadGuy((100*ghostsIndex),0,new Animation(new SpriteSheet("Art/Ghost/GhostSpriteSheet.png", SPRITESIZE, SPRITESIZE), 500));
 					ghostsIndex++;
@@ -133,7 +132,7 @@ public class SetupClass extends BasicGame {
 		
 		
 		//making the ghosts fall down
-		for(int i = 0; i < 10; i++){
+		for(int i = 0; i < ghosts.length; i++){
 			
 			if(ghosts[i] != null){
 				ghosts[i].setY(ghosts[i].getY()+(speed+(score/100)));
@@ -144,13 +143,29 @@ public class SetupClass extends BasicGame {
 				ghosts[i].getHitbox().setX(ghosts[i].getX());
 				ghosts[i].getHitbox().setY(ghosts[i].getY());
 				
-				if(ghosts[i].getY() >= floorBoundary){				//code to make the ghosts disapear when they've reached the bottom. Doesnt work yet.
+				if(ghosts[i].getHitbox().intersects(mouseHitBox) && mouse0Clicked){ //checking if the player clicked the ghost
+					//TODO add the state machine check and the multiplication check here
+					System.out.println("CLICKED ON GHOST "+i);
 					ghosts[i] = null;
-					ghostsIndex--;
+					
+				}
+				
+				if(ghosts[i] != null && ghosts[i].getY() >= floorBoundary){				//code to make the ghosts disapear when they've reached the bottom. Doesnt work yet.
+					ghosts[i] = null;
 					life--;
 				}
 				
 			}
+		}
+		//this chunk is gonna count how many ghosts are still alive, if none of them are alive, the wave is over
+		int ghostCounter = 0;
+		for (int i = 0; i < ghosts.length; i++) {
+			if (ghosts[i] == null) {
+				ghostCounter++;
+			}
+		}
+		if (ghostCounter >= ghosts.length) {//if every ghost is dead, reset the array index so they can respawn
+			ghostsIndex = 0;
 		}
 		
 		
@@ -199,6 +214,7 @@ public class SetupClass extends BasicGame {
 	    		g.drawAnimation(bg.getAnimations()[DEFAULT], bg.getX(), bg.getY());
 	    		g.setColor(new Color(255,255,255));
 	    		g.drawString(bg.getNumber(), bg.getX()+40, bg.getY()-5);
+//	    		g.draw(bg.getHitbox());	//for debugging
 	    		
 	    		/*//Creating invisible boxes that overlay the ghosts, will be used for collision detection.
 	    		Shape hitbox = new Rectangle(bg.getX(), bg.getY(), 100, 100);
@@ -208,6 +224,7 @@ public class SetupClass extends BasicGame {
 	    		
 	    		
 	    	}
+//	    	g.draw(mouseHitBox); //for debugging
 	    }
 	    
 		
