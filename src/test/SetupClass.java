@@ -148,13 +148,18 @@ public class SetupClass extends BasicGame {
 					System.out.println("CLICKED ON GHOST "+i);
 					ghosts[i] = null;
 					
+					
 				}
 				
-				if(ghosts[i] != null && ghosts[i].getY() >= floorBoundary){				//code to make the ghosts disapear when they've reached the bottom. Doesnt work yet.
+				if((ghosts[i] != null && ghosts[i].getY() >= floorBoundary)){				//code to make the ghosts disapear when they've reached the bottom. Doesnt work yet.
 					ghosts[i] = null;
 					life--;
 				}
 				
+				if(ghosts[i] != null && (ghosts[i].getHitbox().intersects(wizard.getHitbox()) || ghosts[i].getHitbox().contains(wizard.getHitbox()))){
+					ghosts[i] = null;
+					life--;
+				}
 			}
 		}
 		//this chunk is gonna count how many ghosts are still alive, if none of them are alive, the wave is over
@@ -175,7 +180,8 @@ public class SetupClass extends BasicGame {
 		if(container.getInput().isKeyDown(Input.KEY_A)){
 			wizard.setAnimationIndex(LEFT);
 			if(wizardX > 1){
-				wizardX -= delta * 0.5f;
+				 wizardX -= delta * 0.5f;
+				 wizard.getHitbox().setX(wizardX);
 			}
 		}
 		
@@ -183,6 +189,7 @@ public class SetupClass extends BasicGame {
 			wizard.setAnimationIndex(RIGHT);
 			if(wizardX < 700){
 				wizardX += delta * 0.5f;
+				wizard.getHitbox().setX(wizardX);
 			}
 		}
 		
@@ -216,11 +223,7 @@ public class SetupClass extends BasicGame {
 	    		g.drawString(bg.getNumber(), bg.getX()+40, bg.getY()-5);
 //	    		g.draw(bg.getHitbox());	//for debugging
 	    		
-	    		/*//Creating invisible boxes that overlay the ghosts, will be used for collision detection.
-	    		Shape hitbox = new Rectangle(bg.getX(), bg.getY(), 100, 100);
-	    		g.setColor(new Color(0,0,0,1));
-	    		g.fill(hitbox);
-	    		g.draw(hitbox);*/
+	    		
 	    		
 	    		
 	    	}
