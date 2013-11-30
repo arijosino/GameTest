@@ -47,6 +47,6 @@ public class ButtonSolid {
 	public ButtonSolid(float x,float y){
 		this.x = x;
 		this.y = y;
-		hitbox = new Rectangle(x, y, 50, 45);
+		hitbox = new Rectangle(x, y, 45, 45);
 	}
 }

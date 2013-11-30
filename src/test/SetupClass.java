@@ -57,7 +57,7 @@ public class SetupClass extends BasicGame {
 	// GameContainer is the window that holds the game and most settings such as mouse precision. 
 	public void init(GameContainer container) throws SlickException {
 		//creating the mouse hitbox as a tiny invisible box just for reference
-		mouseHitBox = new Rectangle(Mouse.getX(), Mouse.getY(), 20, 20);
+		mouseHitBox = new Rectangle(Mouse.getX(), Mouse.getY(), 1, 1);
 		
 		//OctoBoss Animation
 		bossSheet = new SpriteSheet("Art/Octoboss/octbossSpriteSheet.png", SPRITESIZE, SPRITESIZE);
@@ -238,6 +238,16 @@ public class SetupClass extends BasicGame {
 			wizard.setAnimationIndex(DEFAULT);
 		}
 		wizard.getAnimations()[wizard.getAnimationIndex()].setPingPong(true);
+		
+		for (int i = 0; i < buttons.length; i++) {
+			
+			if(buttons[i].getHitbox().intersects(mouseHitBox) && mouse0Clicked){ //checking if the player clicked the ghost
+				//TODO add the state machine check and the multiplication check here
+				System.out.println("CLICKED ON BUTTON "+(i+1));
+			
+			}
+			
+		}
 		
 		
 		mouse0Clicked = false; //reseting the click variable
