@@ -19,7 +19,7 @@ import org.newdawn.slick.geom.Shape;
 
 public class SetupClass extends BasicGame {
 	//declaring some constants to help indexing the animations
-	public static final int DEFAULT=0,LEFT=1,RIGHT=2,RESOLUTIONX=800,RESOLUTIONY=600,MAXGHOSTS=8;
+	public static final int DEFAULT=0,LEFT=1,RIGHT=2, ATTACK=3, RESOLUTIONX=800,RESOLUTIONY=600,MAXGHOSTS=8;
 
 	private SpriteSheet bossSheet; 
 	private Animation bossAnimation;
@@ -68,69 +68,59 @@ public class SetupClass extends BasicGame {
 		wizard = new Solid(wizardX,wizardY);
 		
 		//creating spritesheets for the 3 types of character animation: standing still, walking left and walking right
-		wizard.setSprite(new SpriteSheet[3]);
+		wizard.setSprite(new SpriteSheet[4]);
 		wizard.getSprite()[DEFAULT] = new SpriteSheet("Art/Wizard/WizardSpreadSheet.png", SPRITESIZE, SPRITESIZE);
 		wizard.getSprite()[LEFT] = new SpriteSheet("Art/Wizard/WizardSpreadSheetLeft.png", SPRITESIZE, SPRITESIZE);
 		wizard.getSprite()[RIGHT] = new SpriteSheet("Art/Wizard/WizardSpreadSheetRight.png", SPRITESIZE, SPRITESIZE);
-		
-		wizard.setAnimations(new Animation[3]);
+		wizard.getSprite()[ATTACK] = new SpriteSheet("Art/Wizard/WizardSpriteSheetAttack.png", 133, SPRITESIZE);
+		wizard.setAnimations(new Animation[4]);
 		for(int i=0;i<wizard.getAnimations().length;i++){
 			wizard.getAnimations()[i] = new Animation(wizard.getSprite()[i], 400);
 			wizard.getAnimations()[i].setPingPong(true);
 			
 		}
-		for(int i=0;i<buttons.length;i++){
-			buttons[i] = new ButtonSolid(46+51*(i+1),556);
+
+		/*for(int i=0;i<buttons.length;i++){
+			buttons[i] = new ButtonSolid(100+51*i,556);
+>>>>>>> 145e70d00bc9925a7174d16956ab3d8fbe7b1c2d
 			buttons[i].setPicture(new Image("Art/GUI/Button"+ (i+1) +".png"));
-		}
+		}*/
 				
-//		but1 = new ButtonSolid(97,556);
-//		but1.setHitbox(new Rectangle(but1.getX(),but1.getY(),50,45));
-//		but1.setPicture(new Image("Art/GUI/Button1.png"));
-//		
-//		but2 = new ButtonSolid(148,556);
-//		but2.setHitbox(new Rectangle(but2.getX(),but2.getY(),50,45));
-//		but2.setPicture(new Image("Art/GUI/Button2.png"));
-//
-//		but3 = new ButtonSolid(199,556);
-//		but3.setHitbox(new Rectangle(but3.getX(),but3.getY(),50,45));
-//		but3.setPicture(new Image("Art/GUI/Button3.png"));
-//		
-//		but4 = new ButtonSolid(250,556);
-//		but4.setHitbox(new Rectangle(but4.getX(),but4.getY(),50,45));
-//		but4.setPicture(new Image("Art/GUI/Button4.png"));
-//		
-//		but5 = new ButtonSolid(298,556);
-//		but5.setHitbox(new Rectangle(but5.getX(),but5.getY(),50,45));
-//		but5.setPicture(new Image("Art/GUI/Button5.png"));
-//		
-//		but6 = new ButtonSolid(347,556);
-//		but6.setHitbox(new Rectangle(but6.getX(),but6.getY(),50,45));
-//		but6.setPicture(new Image("Art/GUI/Button6.png"));
-//		
-//		but7 = new ButtonSolid(395,556);
-//		but7.setHitbox(new Rectangle(but7.getX(),but7.getY(),50,45));
-//		but7.setPicture(new Image("Art/GUI/Button7.png"));
-//		
-//		but8 = new ButtonSolid(445,556);
-//		but8.setHitbox(new Rectangle(but8.getX(),but8.getY(),50,45));
-//		but8.setPicture(new Image("Art/GUI/Button8.png"));
-//		
-//		but9 = new ButtonSolid(495,556);
-//		but9.setHitbox(new Rectangle(but9.getX(),but9.getY(),50,45));
-//		but9.setPicture(new Image("Art/GUI/Button9.png"));
-//		
-//		but10 = new ButtonSolid(543,556);
-//		but10.setHitbox(new Rectangle(but10.getX(),but10.getY(),50,45));
-//		but10.setPicture(new Image("Art/GUI/Button10.png"));
-//		
-//		but11 = new ButtonSolid(594,558);
-//		but11.setHitbox(new Rectangle(but11.getX(),but11.getY(),50,45));
-//		but11.setPicture(new Image("Art/GUI/Button11.png"));
-//		
-//		but12 = new ButtonSolid(645,556);
-//		but12.setHitbox(new Rectangle(but12.getX(),but12.getY(),50,45));
-//		but12.setPicture(new Image("Art/GUI/Button12.png"));
+		buttons[0] = new ButtonSolid(97,556);
+		buttons[0].setPicture(new Image("Art/GUI/Button1.png"));
+		
+		buttons[1] = new ButtonSolid(148,556);
+		buttons[1].setPicture(new Image("Art/GUI/Button2.png"));
+
+		buttons[2] = new ButtonSolid(199,556);
+		buttons[2].setPicture(new Image("Art/GUI/Button3.png"));
+		
+		buttons[3] = new ButtonSolid(250,556);
+		buttons[3].setPicture(new Image("Art/GUI/Button4.png"));
+		
+		buttons[4] = new ButtonSolid(298,556);
+		buttons[4].setPicture(new Image("Art/GUI/Button5.png"));
+		
+		buttons[5] = new ButtonSolid(347,556);
+		buttons[5].setPicture(new Image("Art/GUI/Button6.png"));
+		
+		buttons[6] = new ButtonSolid(395,556);
+		buttons[6].setPicture(new Image("Art/GUI/Button7.png"));
+		
+		buttons[7] = new ButtonSolid(445,556);
+		buttons[7].setPicture(new Image("Art/GUI/Button8.png"));
+		
+		buttons[8] = new ButtonSolid(495,556);
+		buttons[8].setPicture(new Image("Art/GUI/Button9.png"));
+		
+		buttons[9] = new ButtonSolid(543,556);
+		buttons[9].setPicture(new Image("Art/GUI/Button10.png"));
+		
+		buttons[10] = new ButtonSolid(594,558);
+		buttons[10].setPicture(new Image("Art/GUI/Button11.png"));
+		
+		buttons[11] = new ButtonSolid(645,556);
+		buttons[11].setPicture(new Image("Art/GUI/Button12.png"));
 	}
 	
 	
@@ -195,11 +185,12 @@ public class SetupClass extends BasicGame {
 				
 				if(ghosts[i].getHitbox().intersects(mouseHitBox) && mouse0Clicked){ //checking if the player clicked the ghost
 					//TODO add the state machine check and the multiplication check here
+					wizard.setAnimationIndex(ATTACK);
 					System.out.println("CLICKED ON GHOST "+i);
 					ghosts[i] = null;
-					
-					
+				
 				}
+				//wizard.setAnimationIndex(DEFAULT);
 				
 				if((ghosts[i] != null && ghosts[i].getY() >= floorBoundary)){				//code to make the ghosts disapear when they've reached the bottom. Doesnt work yet.
 					ghosts[i] = null;
