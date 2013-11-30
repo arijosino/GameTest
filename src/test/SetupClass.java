@@ -46,6 +46,8 @@ public class SetupClass extends BasicGame {
 	private int life = 3;
 	private int bossCount = 0;
 	private ButtonSolid buttons[] = new ButtonSolid[12];
+	private int clickingState = 0,maxClickingState = 2;
+	private Rectangle clearButton = new Rectangle(38, 571, 54, 25);
 
 	
 	public SetupClass(String title) {
@@ -187,7 +189,12 @@ public class SetupClass extends BasicGame {
 					//TODO add the state machine check and the multiplication check here
 					wizard.setAnimationIndex(ATTACK);
 					System.out.println("CLICKED ON GHOST "+i);
-					ghosts[i] = null;
+					if(clickingState == maxClickingState && ghosts[i].getNumber().equals("" + (firstNum * secondNum))){
+						ghosts[i] = null;
+						clickingState = 0;
+						firstNum = 0;
+						secondNum = 0;
+					}
 				
 				}
 				//wizard.setAnimationIndex(DEFAULT);
@@ -243,10 +250,23 @@ public class SetupClass extends BasicGame {
 			
 			if(buttons[i].getHitbox().intersects(mouseHitBox) && mouse0Clicked){ //checking if the player clicked the ghost
 				//TODO add the state machine check and the multiplication check here
+				if(clickingState == 0){
+					firstNum = i+1;
+					clickingState ++;
+				}
+				else if(clickingState == 1){
+					secondNum = i+1;
+					clickingState++;
+				}
 				System.out.println("CLICKED ON BUTTON "+(i+1));
 			
 			}
-			
+			if(clearButton.intersects(mouseHitBox) && mouse0Clicked){ //checking if the player clicked the clear button
+				//reset stuff
+				firstNum = 0;
+				secondNum = 0;
+				clickingState = 0;
+			}
 		}
 		
 		
@@ -291,20 +311,10 @@ public class SetupClass extends BasicGame {
 		//drawing the gui
 		for (int i = 0; i < buttons.length; i++) {
 			buttons[i].getPicture().draw(buttons[i].getX(), buttons[i].getY());
-			g.draw(buttons[i].getHitbox());
+//			g.draw(buttons[i].getHitbox());//for debugging
 		}
-//		g.drawImage(but1.getPicture(), but1.getX(), but1.getY());
-//		g.drawImage(but2.getPicture(), but2.getX(), but2.getY());
-//		g.drawImage(but3.getPicture(), but3.getX(), but3.getY());
-//		g.drawImage(but4.getPicture(), but4.getX(), but4.getY());
-//		g.drawImage(but5.getPicture(), but5.getX(), but5.getY());
-//		g.drawImage(but6.getPicture(), but6.getX(), but6.getY());
-//		g.drawImage(but7.getPicture(), but7.getX(), but7.getY());
-//		g.drawImage(but8.getPicture(), but8.getX(), but8.getY());
-//		g.drawImage(but9.getPicture(), but9.getX(), but9.getY());
-//		g.drawImage(but10.getPicture(), but10.getX(), but10.getY());
-//		g.drawImage(but11.getPicture(), but11.getX(), but11.getY());
-//		g.drawImage(but12.getPicture(), but12.getX(), but12.getY());
+		
+		g.drawString("CLEAR", 42, 573);
 	}
 	
 	
