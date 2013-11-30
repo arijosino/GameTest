@@ -10,12 +10,9 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
-import org.newdawn.slick.InputListener;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
-import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.geom.Shape;
 
 public class SetupClass extends BasicGame {
 	//declaring some constants to help indexing the animations
@@ -40,10 +37,11 @@ public class SetupClass extends BasicGame {
 	private float speed = 0.05f;
 	private float bossSpeed = 0.001f;
 	private float floorBoundary = 450.0f;
-	private int score = 1;
+	public int score = 0;
+	private int wave = 1;
 	private int firstNum = 0;
 	private int secondNum = 0;
-	private int life = 3;
+	private int life = 10;
 	private int bossCount = 0;
 	private ButtonSolid buttons[] = new ButtonSolid[12];
 	private int clickingState = 0,maxClickingState = 2;
@@ -84,7 +82,7 @@ public class SetupClass extends BasicGame {
 
 		/*for(int i=0;i<buttons.length;i++){
 			buttons[i] = new ButtonSolid(100+51*i,556);
->>>>>>> 145e70d00bc9925a7174d16956ab3d8fbe7b1c2d
+
 			buttons[i].setPicture(new Image("Art/GUI/Button"+ (i+1) +".png"));
 		}*/
 				
@@ -161,10 +159,11 @@ public class SetupClass extends BasicGame {
 					ghostsIndex++;
 				}
 			}
+			wave++;
 			bossCount++;
 		}
 		
-		/*if(timeElapsed > 500) {							
+	/*	if(timeElapsed > 500) {							
 			timeElapsed = 0;
 			if(boss != null){
 			boss.setY(boss.getX()+bossSpeed);
@@ -177,7 +176,7 @@ public class SetupClass extends BasicGame {
 		for(int i = 0; i < ghosts.length; i++){
 			
 			if(ghosts[i] != null){
-				ghosts[i].setY(ghosts[i].getY()+(speed+(score/100)));
+				ghosts[i].setY(ghosts[i].getY()+(speed+(wave/5)));
 				//updating animation stuff
 				ghosts[i].getAnimations()[DEFAULT].update(delta);
 				ghosts[i].getAnimations()[DEFAULT].setPingPong(true);
@@ -187,13 +186,15 @@ public class SetupClass extends BasicGame {
 				
 				if(ghosts[i].getHitbox().intersects(mouseHitBox) && mouse0Clicked){ //checking if the player clicked the ghost
 					//TODO add the state machine check and the multiplication check here
-					wizard.setAnimationIndex(ATTACK);
+					
 					System.out.println("CLICKED ON GHOST "+i);
 					if(clickingState == maxClickingState && ghosts[i].getNumber().equals("" + (firstNum * secondNum))){
+						
 						ghosts[i] = null;
 						clickingState = 0;
 						firstNum = 0;
 						secondNum = 0;
+						score++;
 					}
 				
 				}
@@ -294,13 +295,16 @@ public class SetupClass extends BasicGame {
 	    		g.drawString(bg.getNumber(), bg.getX()+40, bg.getY()-5);
 //	    		g.draw(bg.getHitbox());	//for debugging
 	    		
-	    		
+	    	
 	    		
 	    		
 	    	}
 //	    	g.draw(mouseHitBox); //for debugging
 	    }
 	    
+	    /*if(wave % 5 == 0){
+	    	
+	    }*/
 		
 
 	    wizard.getAnimations()[wizard.getAnimationIndex()].draw(wizardX, wizardY); //drawing wizard's current animation
@@ -315,6 +319,8 @@ public class SetupClass extends BasicGame {
 		}
 		
 		g.drawString("CLEAR", 42, 573);
+		g.drawString("score", 700, 563);
+		g.drawString(""+score, 700, 576);
 	}
 	
 	
@@ -323,7 +329,7 @@ public class SetupClass extends BasicGame {
 		AppGameContainer app = new AppGameContainer(new SetupClass("Setup Test"));		//creates window(container)
 		app.setDisplayMode(800, 600, false);				 //first two fields are for the resolution, the last one is boolean for fullscreen
 		app.setAlwaysRender(true); 					//This causes the game to render even if the window is not selected/is not in focus
-		
+		app.setTargetFrameRate(160);
 		app.start();								//starts the game
 	}
 	
