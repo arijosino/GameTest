@@ -45,7 +45,7 @@ public class SetupClass extends BasicGame {
 	private int secondNum = 0;
 	private int life = 3;
 	private int bossCount = 0;
-	private ButtonSolid but1= null, but2= null, but3= null, but4= null, but5= null, but6= null, but7= null, but8= null, but9= null, but10= null, but11= null, but12 = null;
+	private ButtonSolid buttons[] = new ButtonSolid[12];
 
 	
 	public SetupClass(String title) {
@@ -79,54 +79,58 @@ public class SetupClass extends BasicGame {
 			wizard.getAnimations()[i].setPingPong(true);
 			
 		}
+		for(int i=0;i<buttons.length;i++){
+			buttons[i] = new ButtonSolid(46+51*i,556);
+			buttons[i].setPicture(new Image("Art/GUI/Button"+ (i+1) +".png"));
+		}
 				
-		but1 = new ButtonSolid(97,556);
-		but1.setHitbox(new Rectangle(but1.getX(),but1.getY(),50,45));
-		but1.setPicture(new Image("Art/GUI/Button1.png"));
-		
-		but2 = new ButtonSolid(148,556);
-		but2.setHitbox(new Rectangle(but2.getX(),but2.getY(),50,45));
-		but2.setPicture(new Image("Art/GUI/Button2.png"));
-
-		but3 = new ButtonSolid(199,556);
-		but3.setHitbox(new Rectangle(but3.getX(),but3.getY(),50,45));
-		but3.setPicture(new Image("Art/GUI/Button3.png"));
-		
-		but4 = new ButtonSolid(250,556);
-		but4.setHitbox(new Rectangle(but4.getX(),but4.getY(),50,45));
-		but4.setPicture(new Image("Art/GUI/Button4.png"));
-		
-		but5 = new ButtonSolid(298,556);
-		but5.setHitbox(new Rectangle(but5.getX(),but5.getY(),50,45));
-		but5.setPicture(new Image("Art/GUI/Button5.png"));
-		
-		but6 = new ButtonSolid(347,556);
-		but6.setHitbox(new Rectangle(but6.getX(),but6.getY(),50,45));
-		but6.setPicture(new Image("Art/GUI/Button6.png"));
-		
-		but7 = new ButtonSolid(395,556);
-		but7.setHitbox(new Rectangle(but7.getX(),but7.getY(),50,45));
-		but7.setPicture(new Image("Art/GUI/Button7.png"));
-		
-		but8 = new ButtonSolid(445,556);
-		but8.setHitbox(new Rectangle(but8.getX(),but8.getY(),50,45));
-		but8.setPicture(new Image("Art/GUI/Button8.png"));
-		
-		but9 = new ButtonSolid(495,556);
-		but9.setHitbox(new Rectangle(but9.getX(),but9.getY(),50,45));
-		but9.setPicture(new Image("Art/GUI/Button9.png"));
-		
-		but10 = new ButtonSolid(543,556);
-		but10.setHitbox(new Rectangle(but10.getX(),but10.getY(),50,45));
-		but10.setPicture(new Image("Art/GUI/Button10.png"));
-		
-		but11 = new ButtonSolid(594,558);
-		but11.setHitbox(new Rectangle(but11.getX(),but11.getY(),50,45));
-		but11.setPicture(new Image("Art/GUI/Button11.png"));
-		
-		but12 = new ButtonSolid(645,556);
-		but12.setHitbox(new Rectangle(but12.getX(),but12.getY(),50,45));
-		but12.setPicture(new Image("Art/GUI/Button12.png"));
+//		but1 = new ButtonSolid(97,556);
+//		but1.setHitbox(new Rectangle(but1.getX(),but1.getY(),50,45));
+//		but1.setPicture(new Image("Art/GUI/Button1.png"));
+//		
+//		but2 = new ButtonSolid(148,556);
+//		but2.setHitbox(new Rectangle(but2.getX(),but2.getY(),50,45));
+//		but2.setPicture(new Image("Art/GUI/Button2.png"));
+//
+//		but3 = new ButtonSolid(199,556);
+//		but3.setHitbox(new Rectangle(but3.getX(),but3.getY(),50,45));
+//		but3.setPicture(new Image("Art/GUI/Button3.png"));
+//		
+//		but4 = new ButtonSolid(250,556);
+//		but4.setHitbox(new Rectangle(but4.getX(),but4.getY(),50,45));
+//		but4.setPicture(new Image("Art/GUI/Button4.png"));
+//		
+//		but5 = new ButtonSolid(298,556);
+//		but5.setHitbox(new Rectangle(but5.getX(),but5.getY(),50,45));
+//		but5.setPicture(new Image("Art/GUI/Button5.png"));
+//		
+//		but6 = new ButtonSolid(347,556);
+//		but6.setHitbox(new Rectangle(but6.getX(),but6.getY(),50,45));
+//		but6.setPicture(new Image("Art/GUI/Button6.png"));
+//		
+//		but7 = new ButtonSolid(395,556);
+//		but7.setHitbox(new Rectangle(but7.getX(),but7.getY(),50,45));
+//		but7.setPicture(new Image("Art/GUI/Button7.png"));
+//		
+//		but8 = new ButtonSolid(445,556);
+//		but8.setHitbox(new Rectangle(but8.getX(),but8.getY(),50,45));
+//		but8.setPicture(new Image("Art/GUI/Button8.png"));
+//		
+//		but9 = new ButtonSolid(495,556);
+//		but9.setHitbox(new Rectangle(but9.getX(),but9.getY(),50,45));
+//		but9.setPicture(new Image("Art/GUI/Button9.png"));
+//		
+//		but10 = new ButtonSolid(543,556);
+//		but10.setHitbox(new Rectangle(but10.getX(),but10.getY(),50,45));
+//		but10.setPicture(new Image("Art/GUI/Button10.png"));
+//		
+//		but11 = new ButtonSolid(594,558);
+//		but11.setHitbox(new Rectangle(but11.getX(),but11.getY(),50,45));
+//		but11.setPicture(new Image("Art/GUI/Button11.png"));
+//		
+//		but12 = new ButtonSolid(645,556);
+//		but12.setHitbox(new Rectangle(but12.getX(),but12.getY(),50,45));
+//		but12.setPicture(new Image("Art/GUI/Button12.png"));
 	}
 	
 	
@@ -283,19 +287,23 @@ public class SetupClass extends BasicGame {
 		g.drawString("" + firstNum + " x " + secondNum + " = " + firstNum*secondNum, 250, 530);
 		
 		//bossAnimation.draw(400, 100);
-		
-		g.drawImage(but1.getPicture(), but1.getX(), but1.getY());
-		g.drawImage(but2.getPicture(), but2.getX(), but2.getY());
-		g.drawImage(but3.getPicture(), but3.getX(), but3.getY());
-		g.drawImage(but4.getPicture(), but4.getX(), but4.getY());
-		g.drawImage(but5.getPicture(), but5.getX(), but5.getY());
-		g.drawImage(but6.getPicture(), but6.getX(), but6.getY());
-		g.drawImage(but7.getPicture(), but7.getX(), but7.getY());
-		g.drawImage(but8.getPicture(), but8.getX(), but8.getY());
-		g.drawImage(but9.getPicture(), but9.getX(), but9.getY());
-		g.drawImage(but10.getPicture(), but10.getX(), but10.getY());
-		g.drawImage(but11.getPicture(), but11.getX(), but11.getY());
-		g.drawImage(but12.getPicture(), but12.getX(), but12.getY());
+		//drawing the gui
+		for (int i = 0; i < buttons.length; i++) {
+			buttons[i].getPicture().draw(buttons[i].getX(), buttons[i].getY());
+			g.draw(buttons[i].getHitbox());
+		}
+//		g.drawImage(but1.getPicture(), but1.getX(), but1.getY());
+//		g.drawImage(but2.getPicture(), but2.getX(), but2.getY());
+//		g.drawImage(but3.getPicture(), but3.getX(), but3.getY());
+//		g.drawImage(but4.getPicture(), but4.getX(), but4.getY());
+//		g.drawImage(but5.getPicture(), but5.getX(), but5.getY());
+//		g.drawImage(but6.getPicture(), but6.getX(), but6.getY());
+//		g.drawImage(but7.getPicture(), but7.getX(), but7.getY());
+//		g.drawImage(but8.getPicture(), but8.getX(), but8.getY());
+//		g.drawImage(but9.getPicture(), but9.getX(), but9.getY());
+//		g.drawImage(but10.getPicture(), but10.getX(), but10.getY());
+//		g.drawImage(but11.getPicture(), but11.getX(), but11.getY());
+//		g.drawImage(but12.getPicture(), but12.getX(), but12.getY());
 	}
 	
 	
