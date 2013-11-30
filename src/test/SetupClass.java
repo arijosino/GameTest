@@ -80,7 +80,7 @@ public class SetupClass extends BasicGame {
 			
 		}
 		for(int i=0;i<buttons.length;i++){
-			buttons[i] = new ButtonSolid(46+51*i,556);
+			buttons[i] = new ButtonSolid(46+51*(i+1),556);
 			buttons[i].setPicture(new Image("Art/GUI/Button"+ (i+1) +".png"));
 		}
 				
