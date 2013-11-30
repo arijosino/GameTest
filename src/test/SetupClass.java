@@ -10,9 +10,12 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
+import org.newdawn.slick.InputListener;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
+import org.newdawn.slick.geom.Circle;
 import org.newdawn.slick.geom.Rectangle;
+import org.newdawn.slick.geom.Shape;
 
 public class SetupClass extends BasicGame {
 	//declaring some constants to help indexing the animations
@@ -37,11 +40,10 @@ public class SetupClass extends BasicGame {
 	private float speed = 0.05f;
 	private float bossSpeed = 0.001f;
 	private float floorBoundary = 450.0f;
-	private int score = 0;
-	private int wave = 1;
+	private int score = 1;
 	private int firstNum = 0;
 	private int secondNum = 0;
-	private int life = 10;
+	private int life = 3;
 	private int bossCount = 0;
 	private ButtonSolid buttons[] = new ButtonSolid[12];
 	private int clickingState = 0,maxClickingState = 2;
@@ -159,7 +161,6 @@ public class SetupClass extends BasicGame {
 					ghostsIndex++;
 				}
 			}
-			wave++;
 			bossCount++;
 		}
 		
@@ -176,7 +177,7 @@ public class SetupClass extends BasicGame {
 		for(int i = 0; i < ghosts.length; i++){
 			
 			if(ghosts[i] != null){
-				ghosts[i].setY(ghosts[i].getY()+(speed+(wave/10)));
+				ghosts[i].setY(ghosts[i].getY()+(speed+(score/100)));
 				//updating animation stuff
 				ghosts[i].getAnimations()[DEFAULT].update(delta);
 				ghosts[i].getAnimations()[DEFAULT].setPingPong(true);
@@ -193,7 +194,6 @@ public class SetupClass extends BasicGame {
 						clickingState = 0;
 						firstNum = 0;
 						secondNum = 0;
-						score++;
 					}
 				
 				}
@@ -315,8 +315,6 @@ public class SetupClass extends BasicGame {
 		}
 		
 		g.drawString("CLEAR", 42, 573);
-		g.drawString("score", 700, 563);
-		g.drawString(""+score, 700, 576);
 	}
 	
 	
@@ -325,7 +323,7 @@ public class SetupClass extends BasicGame {
 		AppGameContainer app = new AppGameContainer(new SetupClass("Setup Test"));		//creates window(container)
 		app.setDisplayMode(800, 600, false);				 //first two fields are for the resolution, the last one is boolean for fullscreen
 		app.setAlwaysRender(true); 					//This causes the game to render even if the window is not selected/is not in focus
-		app.setTargetFrameRate(160);
+		
 		app.start();								//starts the game
 	}
 	
