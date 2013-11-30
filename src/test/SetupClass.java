@@ -176,7 +176,7 @@ public class SetupClass extends BasicGame {
 		for(int i = 0; i < ghosts.length; i++){
 			
 			if(ghosts[i] != null){
-				ghosts[i].setY(ghosts[i].getY()+(speed+(wave/5)));
+				ghosts[i].setY(ghosts[i].getY()+(speed+(((float)wave)/10)));
 				//updating animation stuff
 				ghosts[i].getAnimations()[DEFAULT].update(delta);
 				ghosts[i].getAnimations()[DEFAULT].setPingPong(true);
