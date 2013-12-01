@@ -16,7 +16,9 @@ import org.newdawn.slick.geom.Rectangle;
 
 public class SetupClass extends BasicGame {
 	//declaring some constants to help indexing the animations
-	public static final int DEFAULT=0,LEFT=1,RIGHT=2, ATTACK=3, RESOLUTIONX=800,RESOLUTIONY=600,MAXGHOSTS=8;
+	public static final int DEFAULT=0,LEFT=1,RIGHT=2, ATTACK=3, RESOLUTIONX=800,RESOLUTIONY=600,MAXGHOSTS=8, MAXLEVEL = 12,MINLEVEL = 2;
+	
+	private GameListener listener;
 
 	private SpriteSheet bossSheet; 
 	private Animation bossAnimation;
@@ -34,24 +36,41 @@ public class SetupClass extends BasicGame {
 	private int timeElapsed = 0;
 	private int ghostsIndex = 0;
 	private int SPRITESIZE = 100;
-	private float speed = 0.05f;
-	private float bossSpeed = 0.001f;
+	private float speed = 0.01f;
+	private float bossSpeed = 0.1f;
 	private float floorBoundary = 450.0f;
 	public int score = 0;
 	private int wave = 1;
 	private int firstNum = 0;
 	private int secondNum = 0;
 	private int life = 10;
-	private int bossCount = 0;
+	private int level = 2;
 	private ButtonSolid buttons[] = new ButtonSolid[12];
 	private int clickingState = 0,maxClickingState = 2;
 	private Rectangle clearButton = new Rectangle(38, 571, 54, 25);
 
 	
-	public SetupClass(String title) {
-		
-		
+	public SetupClass(String title,int level,GameListener listener) throws SlickException {
 		super("GHOST SLAYER XII");
+		//some treatment for the level
+		if(level >= MINLEVEL && level <= MAXLEVEL){
+			this.level = level;
+		}
+		else{
+			if(level < MINLEVEL){
+				this.level = MINLEVEL;
+			}
+			else{
+				this.level = MAXLEVEL;
+			}
+		}
+		this.listener = listener;
+		
+		AppGameContainer app = new AppGameContainer(this);		//creates window(container)
+		app.setDisplayMode(800, 600, false);				 //first two fields are for the resolution, the last one is boolean for fullscreen
+		app.setAlwaysRender(true); 					//This causes the game to render even if the window is not selected/is not in focus
+		app.setTargetFrameRate(60);
+		app.start();								//starts the game
 	}
 
 	// GameContainer is the window that holds the game and most settings such as mouse precision. 
@@ -80,11 +99,6 @@ public class SetupClass extends BasicGame {
 			
 		}
 
-		/*for(int i=0;i<buttons.length;i++){
-			buttons[i] = new ButtonSolid(100+51*i,556);
-
-			buttons[i].setPicture(new Image("Art/GUI/Button"+ (i+1) +".png"));
-		}*/
 				
 		buttons[0] = new ButtonSolid(97,556);
 		buttons[0].setPicture(new Image("Art/GUI/Button1.png"));
@@ -155,20 +169,19 @@ public class SetupClass extends BasicGame {
 		if(timeElapsed > 500 & ghostsIndex < ghosts.length){
 			for(int i = 0; i < ghosts.length; i++){
 				if(ghosts[i] == null){
-					ghosts[i] = new BadGuy((100*ghostsIndex),0,new Animation(new SpriteSheet("Art/Ghost/GhostSpriteSheet.png", SPRITESIZE, SPRITESIZE), 500));
+					ghosts[i] = new BadGuy((100*ghostsIndex),0,new Animation(new SpriteSheet("Art/Ghost/GhostSpriteSheet.png", SPRITESIZE, SPRITESIZE), 500),level);
 					ghostsIndex++;
 				}
 			}
 			wave++;
-			bossCount++;
 		}
-		
-	/*	if(timeElapsed > 500) {							
-			timeElapsed = 0;
-			if(boss != null){
-			boss.setY(boss.getX()+bossSpeed);
-			}
-		}*/
+		//Boss code
+//		if(wave%5 == 0 && boss == null && level >= MAXLEVEL){
+//			boss = new BadGuy(400, 0, bossAnimation,level);
+//		}
+//		if(boss != null){
+//			boss.setY(boss.getY()+bossSpeed);
+//		}
 		
 		
 		
@@ -270,6 +283,10 @@ public class SetupClass extends BasicGame {
 			}
 		}
 		
+		if(container.getInput().isKeyDown(Input.KEY_ESCAPE) || (wave >= 5 && level < MAXLEVEL)){
+			quit(container);
+		}
+		
 		
 		mouse0Clicked = false; //reseting the click variable
 	}
@@ -282,12 +299,14 @@ public class SetupClass extends BasicGame {
 	    g.setBackground(new Color(150,150,150));				//This sets the background color of the screen to white
 	    g.drawImage(new Image("Art/Background/sky.png"), 0, 0);
 	    
-		g.drawString(mouse, 50, 50);
-		/*if(bossCount%5 == 0){
-			boss = new BadGuy(400, 0, bossAnimation);
-			g.drawAnimation(boss.getAm(), boss.getX(), boss.getY());
-			bossCount-= 5;
-		}*/
+		g.drawString(mouse, 50, 50);//for debugging
+		
+		//drawing the boss
+		if(boss != null){
+			g.drawAnimation(boss.getAnimations()[DEFAULT], boss.getX(), boss.getY());
+		}
+		
+		//drawing ghosts
 	    for(BadGuy bg : ghosts){
 	    	if(bg != null){
 	    		g.drawAnimation(bg.getAnimations()[DEFAULT], bg.getX(), bg.getY());
@@ -301,18 +320,12 @@ public class SetupClass extends BasicGame {
 	    	}
 //	    	g.draw(mouseHitBox); //for debugging
 	    }
-	    
-	    /*if(wave % 5 == 0){
-	    	
-	    }*/
-		
 
 	    wizard.getAnimations()[wizard.getAnimationIndex()].draw(wizardX, wizardY); //drawing wizard's current animation
+	    
+	    //drawing the GUI
 		g.drawString("Health: " + life, 100, 530);
 		g.drawString("" + firstNum + " x " + secondNum + " = " + firstNum*secondNum, 250, 530);
-		
-		//bossAnimation.draw(400, 100);
-		//drawing the gui
 		for (int i = 0; i < buttons.length; i++) {
 			buttons[i].getPicture().draw(buttons[i].getX(), buttons[i].getY());
 //			g.draw(buttons[i].getHitbox());//for debugging
@@ -326,11 +339,20 @@ public class SetupClass extends BasicGame {
 	
 	
 	public static void main(String[] args) throws SlickException {
-		AppGameContainer app = new AppGameContainer(new SetupClass("Setup Test"));		//creates window(container)
-		app.setDisplayMode(800, 600, false);				 //first two fields are for the resolution, the last one is boolean for fullscreen
-		app.setAlwaysRender(true); 					//This causes the game to render even if the window is not selected/is not in focus
-		app.setTargetFrameRate(160);
-		app.start();								//starts the game
+		new SetupClass("setup class",10,new GameListener() {
+			
+			@Override
+			public void retrieveScore(int score) {
+				System.out.println(score);
+				
+			}
+		});
+	}
+	
+	public void quit(GameContainer container){//do some stuff before exiting, like passing score info
+		//TODO pass the score and stuff
+		container.exit();
+		this.listener.retrieveScore(score);
 	}
 	
 }
