@@ -283,7 +283,7 @@ public class SetupClass extends BasicGame {
 			}
 		}
 		
-		if(container.getInput().isKeyDown(Input.KEY_ESCAPE) || (wave >= 5 && level < MAXLEVEL)){
+		if(container.getInput().isKeyDown(Input.KEY_ESCAPE) || (wave >= 5 && level < MAXLEVEL) || life <= 0){
 			quit(container);
 		}
 		
@@ -351,6 +351,7 @@ public class SetupClass extends BasicGame {
 	
 	public void quit(GameContainer container){//do some stuff before exiting, like passing score info
 		//TODO pass the score and stuff
+		container.setForceExit(false);
 		container.exit();
 		this.listener.retrieveScore(score);
 	}
